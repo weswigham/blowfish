@@ -8,15 +8,15 @@ def main(mode, key, infile, outfile):
     cipher = Blowfish(key)
     text = infile.read()
     
-    for i=0,len(text),cipher.blockSize():
-        block = ()
+    for i in range(0,len(text),cipher.blockSize()):
+        block = bytearray()
         if i+cipher.blockSize() <= len(text):
-            block = text[i:i+cipher.blockSize()-1]
+            block.extend(text[i:i+cipher.blockSize()])
         else:
-            block = text[i:]
+            block.extend(text[i:])
             remainder = cipher.blockSize()-len(block) #Not sure if necessary
-            for j=0,remainder:
-                block.append(b'0')
+            for j in range(remainder):
+                block.append(0)
         
         out = ()
         
@@ -25,21 +25,18 @@ def main(mode, key, infile, outfile):
         elif mode==MODE_DECRYPT:
             out = cipher.decrypt(block)
             
-        outfile.write(out)
+        outfile.write(out or "")
  
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
+    if len(sys.argv) < 2:
         print("Usage: python fishc.py {-e/-d} key [inputfile] [outputfile]")
-        return 
+        sys.exit(1)
     else:
-        infile,outfile = ()
         try:
-            infile = open(sys.argv[3], 'rb')
+            infile,outfile = open(sys.argv[3], 'rb'),open(sys.argv[4], 'wb')
+            main(sys.argv[1], sys.argv[2], infile, outfile)
         except:
             infile = sys.stdin.buffer
-        try:
-            outfile = open(sys.argv[4], 'wb')
-        except:
-            outfile = sys.stdout.buffer
-        main(sys.argv[1], sys.argv[2], infile, outfile)
+            outfile = sys.stdout
+            main(sys.argv[1], sys.argv[2], infile, outfile)
