@@ -5,7 +5,7 @@ MODE_ENCRYPT = '-e'
 MODE_DECRYPT = '-d'
 
 def main(mode, key, infile, outfile):
-    cipher = Blowfish(key)
+    cipher = Blowfish(bytearray.fromhex(key))
     text = infile.read()
     
     for i in range(0,len(text),cipher.blockSize()):
@@ -25,7 +25,7 @@ def main(mode, key, infile, outfile):
         elif mode==MODE_DECRYPT:
             out = cipher.decrypt(block)
             
-        outfile.write(out or "")
+        outfile.write(out or b'')
  
 
 if __name__ == "__main__":
@@ -38,5 +38,5 @@ if __name__ == "__main__":
             main(sys.argv[1], sys.argv[2], infile, outfile)
         except:
             infile = sys.stdin.buffer
-            outfile = sys.stdout
+            outfile = sys.stdout.buffer
             main(sys.argv[1], sys.argv[2], infile, outfile)
