@@ -316,7 +316,34 @@ class Blowfish():
         """
         Uses the key to generate initial state s-boxes
         """
-        pass
+        
+        #Step 2: XOR in key bits
+        key_len = len(self.key)
+        cur_pos = 0
+        for i in range(len(self.P)):
+            if cur_pos+4 > key_len:
+                next_pos = (cur_pos+4)%key_len
+                self.P[i] ^= self.key[cur_pos:].extend(self.key[:next_pos])
+                cur_pos = next_pos
+            else:
+                self.P[i] ^= self.key[cur_pos:cur_pos+4]
+                cur_pos += 4
+                
+        #Step 3: Encrypt the all-0 string with the algorithm
+        
+        all_zero = bytearray('0x0000000000000000'.encode('hex'))
+        
+        for i in range(0,len(self.P),2):
+            all_zero = encrypt_block(all_zero)
+            self.P[i] = all_zero[0]
+            self.P[i+1] = all_zero[1]
+            
+        for i in range(len(self.S)):
+            for j in range(0,len(self.S[i]),2):
+                all_zero = encrypt_block(all_zero)
+                self.S[i][j] = all_zero[0]
+                self.S[i][j+1] = all_zero[1]
+        
         
     def feistel(self, num)
         """
