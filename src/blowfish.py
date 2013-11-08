@@ -372,7 +372,7 @@ class Blowfish():
             right = self.feistel(left) ^ right
             left, right = right, left
         
-        left, right = left, right
+        left, right = right, left
         right ^= self.P[16]
         left ^= self.P[17]
         
@@ -392,7 +392,7 @@ class Blowfish():
             right = self.feistel(left) ^ right
             left, right = right, left
         
-        left, right = left, right
+        left, right = right, left
         right ^= self.P[1]
         left ^= self.P[0]
         
