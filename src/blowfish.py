@@ -282,13 +282,15 @@ class Blowfish():
         ]
         self.generate_s_box()
 
-    def blockSize(self):
+    @staticmethod
+    def blockSize():
         """
         Returns the cipher's block size in bytes
         """
         return 8
         
-    def keySize(self):
+    @staticmethod
+    def keySize():
         """
         Returns the cipher's key size in bytes
         """

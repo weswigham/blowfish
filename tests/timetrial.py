@@ -13,10 +13,10 @@ class TestRunningTime(unittest.TestCase):
             self.test_once()
 
     def test_once(self):
-        zero_key = bytearray(b'\x00' * Blowfish.keySize(None))
+        zero_key = bytearray(b'\x00' * Blowfish.keySize())
         self.cipher = Blowfish(zero_key)
 
-        zero_block = bytearray(b'\x00' * Blowfish.blockSize(None))
+        zero_block = bytearray(b'\x00' * Blowfish.blockSize())
         self.cipher.encrypt(zero_block)
         print(zero_block)
 
