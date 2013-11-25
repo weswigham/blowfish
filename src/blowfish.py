@@ -306,13 +306,17 @@ class Blowfish():
         """
         Given a plaintext block, produces a ciphertext
         """
-        return self.encrypt_block(plain)
+        eblock = self.encrypt_block(plain)
+        for i in range(8):
+            plain[i] = eblock[i]
         
     def decrypt(self, cipher):
         """
         Given a ciphertext block, produces a plaintext
         """
-        return self.decrypt_block(cipher)
+        cblock = self.decrypt_block(cipher)
+        for i in range(8):
+            cipher[i] = cblock[i]
         
     def generate_s_box(self):
         """
