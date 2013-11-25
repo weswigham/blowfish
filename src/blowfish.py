@@ -369,7 +369,7 @@ class Blowfish():
         Applies the algorithm to a block
         """
         left = unpack('>I',block[0:4])[0]
-        right = unpack('>I',block[5:8])[0]
+        right = unpack('>I',block[4:8])[0]
         
         for i in range(1,17):
             left ^= self.P[i]
@@ -389,7 +389,7 @@ class Blowfish():
         Un-Applies the algorithm to a block
         """
         left = unpack('>I',block[0:4])[0]
-        right = unpack('>I',block[5:8])[0]
+        right = unpack('>I',block[4:8])[0]
         
         for i in range(17,1,-1):
             left ^= self.P[i]
