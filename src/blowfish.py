@@ -293,7 +293,7 @@ class Blowfish():
         Returns the cipher's key size in bytes
         """
         #32 bits up to 448 bits
-        return 56 #448 bits!
+        return 8 #64 bits!
         
     def setKey(self, key):
         """
