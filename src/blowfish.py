@@ -373,7 +373,7 @@ class Blowfish():
         left = unpack('>I',block[0:4])[0]
         right = unpack('>I',block[4:8])[0]
         
-        for i in range(1,17):
+        for i in range(0,17):
             left ^= self.P[i]
             right = self.feistel(left) ^ right
             left, right = right, left
@@ -383,7 +383,7 @@ class Blowfish():
         left ^= self.P[17]
         
         ret = bytearray(pack('>I', left))
-        ret.extend(pack('>I', left))
+        ret.extend(pack('>I', right))
         return ret
         
     def decrypt_block(self, block):
