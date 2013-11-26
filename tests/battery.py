@@ -1,5 +1,6 @@
 import unittest
 import sys
+import struct
 
 sys.path.append("../src/")
 from blowfish import Blowfish
@@ -49,6 +50,7 @@ class TestVectors(unittest.TestCase):
             ciphertext = bytearray.fromhex(ciphertext)
 
             self.test_vector(key, cleartext) # in-place encrypt
+            print(hex(struct.unpack('>Q',cleartext)[0]))
             self.assertEqual(cleartext, ciphertext)
 
     def test_vector(self, key, cleartext):

@@ -345,14 +345,14 @@ class Blowfish():
         
         for i in range(0,len(self.P),2):
             all_zero = self.encrypt_block(all_zero)
-            self.P[i] = all_zero[0]
-            self.P[i+1] = all_zero[1]
+            self.P[i] = unpack('>I',all_zero[0:4])[0]
+            self.P[i+1] = unpack('>I',all_zero[4:8])[0]
             
         for i in range(len(self.S)):
             for j in range(0,len(self.S[i]),2):
                 all_zero = self.encrypt_block(all_zero)
-                self.S[i][j] = all_zero[0]
-                self.S[i][j+1] = all_zero[1]
+                self.S[i][j] = unpack('>I',all_zero[0:4])[0]
+                self.S[i][j+1] = unpack('>I',all_zero[4:8])[0]
         
         
     def feistel(self, num):
@@ -364,7 +364,7 @@ class Blowfish():
         parts = pack('>I', num)
         a,b,c,d = parts[0],parts[1],parts[2],parts[3]
         return (((self.S[0][a] + self.S[1][b] % 2**32) ^ self.S[2][c]) 
-                + self.S[3][c]) % 2**32
+                + self.S[3][d]) % 2**32
                 
     def encrypt_block(self, block):
         """
@@ -373,7 +373,7 @@ class Blowfish():
         left = unpack('>I',block[0:4])[0]
         right = unpack('>I',block[4:8])[0]
         
-        for i in range(0,17):
+        for i in range(0,16):
             left ^= self.P[i]
             right = self.feistel(left) ^ right
             left, right = right, left
