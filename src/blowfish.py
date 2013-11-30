@@ -363,25 +363,106 @@ class Blowfish():
         # First, divide num into 4 quarters, a, b, c, and d
         parts = pack('>I', num)
         a,b,c,d = parts[0],parts[1],parts[2],parts[3]
-        return (((self.S[0][a] + self.S[1][b] % 2**32) ^ self.S[2][c]) 
-                + self.S[3][d]) % 2**32
-                
+        return (((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+                + self.S[3][d]) % 4294967296
+
+    
     def encrypt_block(self, block):
         """
         Applies the algorithm to a block
         """
         left = unpack('>I',block[0:4])[0]
         right = unpack('>I',block[4:8])[0]
+
         
-        for i in range(0,16):
-            left ^= self.P[i]
-            right = self.feistel(left) ^ right
-            left, right = right, left
+        #for i in range(0,16,2):
+        xleft = left^self.P[0]
+        p = pack('>I',xleft)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^right^self.P[1]
+        p = pack('>I', right)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^xleft
+
+        xleft = left^self.P[2]
+        p = pack('>I',xleft)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^right^self.P[3]
+        p = pack('>I', right)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^xleft
+
+        xleft = left^self.P[4]
+        p = pack('>I',xleft)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^right^self.P[5]
+        p = pack('>I', right)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^xleft
+
+        xleft = left^self.P[6]
+        p = pack('>I',xleft)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^right^self.P[7]
+        p = pack('>I', right)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^xleft
+
+        xleft = left^self.P[8]
+        p = pack('>I',xleft)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^right^self.P[9]
+        p = pack('>I', right)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^xleft
+
+        xleft = left^self.P[10]
+        p = pack('>I',xleft)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^right^self.P[11]
+        p = pack('>I', right)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^xleft
+
+        xleft = left^self.P[12]
+        p = pack('>I',xleft)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^right^self.P[13]
+        p = pack('>I', right)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^xleft
+
+        xleft = left^self.P[14]
+        p = pack('>I',xleft)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^right^self.P[15]
+        p = pack('>I', right)
+        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
+            + self.S[3][d]) % 4294967296)^xleft
+
+        
+
+        
         
         left, right = right, left
         right ^= self.P[16]
         left ^= self.P[17]
-        
         ret = bytearray(pack('>I', left))
         ret.extend(pack('>I', right))
         return ret
