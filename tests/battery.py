@@ -1,6 +1,9 @@
 import unittest
 import sys
 import struct
+import os
+
+print(os.getcwd())
 
 sys.path.append("../src/")
 from blowfish import Blowfish

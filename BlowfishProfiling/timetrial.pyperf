@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ProfilingTarget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <StandaloneTarget>
+    <PythonInterpreter>
+      <Id>2af0f10d-7135-4994-9156-5d01c9c11b7e</Id>
+      <Version>3.3</Version>
+    </PythonInterpreter>
+    <WorkingDirectory>D:\Users\Chad\Dropbox\Workbench\CodeProjects\school\blowfish\tests</WorkingDirectory>
+    <Script>D:\Users\Chad\Dropbox\Workbench\CodeProjects\school\blowfish\tests\timetrial.py</Script>
+    <Arguments />
+  </StandaloneTarget>
+</ProfilingTarget>

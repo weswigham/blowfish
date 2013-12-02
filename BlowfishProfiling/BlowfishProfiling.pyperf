@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ProfilingTarget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectTarget>
+    <TargetProject>62d13e28-9ddd-4720-94e7-c90ffa3afd18</TargetProject>
+    <FriendlyName>BlowfishProfiling</FriendlyName>
+  </ProjectTarget>
+</ProfilingTarget>

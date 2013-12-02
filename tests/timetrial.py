@@ -11,28 +11,37 @@ class TestRunningTime(unittest.TestCase):
         self.n = 1
 
     def test_ntimes(self):
-        t = datetime.now()
-        #print("Starting trial at " +str(t))
         zero_key = bytearray(b'\x00' * Blowfish.keySize())
         self.cipher = Blowfish(zero_key)
         for i in range(self.n):
             self.test_once()
-        y = datetime.now()
-        t = y - t
-        #print("Ending timetrial at " + str(y))
-        #print("Total time taken: "+str(t))
+            if i % 100 == 0:
+                print('.', end='')
+                sys.stdout.flush()
 
     def test_once(self):
-        
-
         zero_block = bytearray(b'\x00' * Blowfish.blockSize())
         self.cipher.encrypt(zero_block)
         #print(zero_block)
 
 
-
 x = TestRunningTime()
 x.setUp()
-n = input("How many times should the all 0 bitstring?\n")
-x.n = int(n)
-cProfile.run('x.test_ntimes()')
+x.n = 100000 #int(input("How many times should we encrypt the all 0 bitstring?\n"))
+
+if False: # Using cProfile
+    cProfile.run('x.test_ntimes()')
+
+if True: # Plain ol' time trial
+    start_t = datetime.now()
+    print("Starting trial at " + str(start_t))
+
+    x.test_ntimes()
+    print()
+
+    end_t = datetime.now()
+    total_t = end_t - start_t
+    print("Ending timetrial at " + str(end_t))
+    print("Total time taken: "+str(total_t))
+
+print('Done.')
