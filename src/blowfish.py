@@ -361,8 +361,10 @@ class Blowfish():
         """
         # ((S1,a + S2,b mod 2^32) XOR S3,c) + S4,d mod 2^32
         # First, divide num into 4 quarters, a, b, c, and d
-        parts = pack('>I', num)
-        a,b,c,d = parts[0],parts[1],parts[2],parts[3]
+        
+        a,b,c,c = num & 0xFF, num & 0xFF00 >> 8, num & 0xFF0000 >> 16, num & 0xFF000000 >> 24
+        #parts = pack('>I', num)
+        #a,b,c,d = parts[0],parts[1],parts[2],parts[3]
         return (((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
                 + self.S[3][d]) % 4294967296
 
@@ -371,88 +373,94 @@ class Blowfish():
         """
         Applies the algorithm to a block
         """
-        left = unpack('>I',block[0:4])[0]
-        right = unpack('>I',block[4:8])[0]
+        left = block[3] | (block[2] << 8) | (block[1] << 16) | (block[0] << 24)
+        right = block[7] | (block[6] << 8) | (block[5] << 16) | (block[4] << 24)
 
         
         #for i in range(0,16,2):
         xleft = left^self.P[0]
-        p = pack('>I',xleft)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        #p = pack('>I',xleft)
+        #a,b,c,d = p[0], p[1], p[2] ,p[3]
+        
+        d,c,b,a = xleft & 0xFF, (xleft & 0xFF00) >> 8, (xleft & 0xFF0000) >> 16, (xleft & 0xFF000000) >> 24
+        
         right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^right^self.P[1]
-        p = pack('>I', right)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        #p = pack('>I', right)
+        #a,b,c,d = p[0], p[1], p[2] ,p[3]
+        
+        d,c,b,a = right & 0xFF, (right & 0xFF00) >> 8, (right & 0xFF0000) >> 16, (right & 0xFF000000) >> 24
+        
         left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^xleft
 
         xleft = left^self.P[2]
-        p = pack('>I',xleft)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = xleft & 0xFF, (xleft & 0xFF00) >> 8, (xleft & 0xFF0000) >> 16, (xleft & 0xFF000000) >> 24
+        
         right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^right^self.P[3]
-        p = pack('>I', right)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = right & 0xFF, (right & 0xFF00) >> 8, (right & 0xFF0000) >> 16, (right & 0xFF000000) >> 24
+        
         left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^xleft
 
         xleft = left^self.P[4]
-        p = pack('>I',xleft)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = xleft & 0xFF, (xleft & 0xFF00) >> 8, (xleft & 0xFF0000) >> 16, (xleft & 0xFF000000) >> 24
+        
         right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^right^self.P[5]
-        p = pack('>I', right)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = right & 0xFF, (right & 0xFF00) >> 8, (right & 0xFF0000) >> 16, (right & 0xFF000000) >> 24
+        
         left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^xleft
 
         xleft = left^self.P[6]
-        p = pack('>I',xleft)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = xleft & 0xFF, (xleft & 0xFF00) >> 8, (xleft & 0xFF0000) >> 16, (xleft & 0xFF000000) >> 24
+        
         right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^right^self.P[7]
-        p = pack('>I', right)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = right & 0xFF, (right & 0xFF00) >> 8, (right & 0xFF0000) >> 16, (right & 0xFF000000) >> 24
+        
         left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^xleft
 
         xleft = left^self.P[8]
-        p = pack('>I',xleft)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = xleft & 0xFF, (xleft & 0xFF00) >> 8, (xleft & 0xFF0000) >> 16, (xleft & 0xFF000000) >> 24
+        
         right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^right^self.P[9]
-        p = pack('>I', right)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = right & 0xFF, (right & 0xFF00) >> 8, (right & 0xFF0000) >> 16, (right & 0xFF000000) >> 24
+        
         left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^xleft
 
         xleft = left^self.P[10]
-        p = pack('>I',xleft)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = xleft & 0xFF, (xleft & 0xFF00) >> 8, (xleft & 0xFF0000) >> 16, (xleft & 0xFF000000) >> 24
+        
         right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^right^self.P[11]
-        p = pack('>I', right)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = right & 0xFF, (right & 0xFF00) >> 8, (right & 0xFF0000) >> 16, (right & 0xFF000000) >> 24
+        
         left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^xleft
 
         xleft = left^self.P[12]
-        p = pack('>I',xleft)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = xleft & 0xFF, (xleft & 0xFF00) >> 8, (xleft & 0xFF0000) >> 16, (xleft & 0xFF000000) >> 24
+        
         right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^right^self.P[13]
-        p = pack('>I', right)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = right & 0xFF, (right & 0xFF00) >> 8, (right & 0xFF0000) >> 16, (right & 0xFF000000) >> 24
+        
         left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^xleft
 
         xleft = left^self.P[14]
-        p = pack('>I',xleft)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = xleft & 0xFF, (xleft & 0xFF00) >> 8, (xleft & 0xFF0000) >> 16, (xleft & 0xFF000000) >> 24
+        
         right = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^right^self.P[15]
-        p = pack('>I', right)
-        a,b,c,d = p[0], p[1], p[2] ,p[3]
+        d,c,b,a = right & 0xFF, (right & 0xFF00) >> 8, (right & 0xFF0000) >> 16, (right & 0xFF000000) >> 24
+        
         left = ((((self.S[0][a] + self.S[1][b] % 4294967296) ^ self.S[2][c]) 
             + self.S[3][d]) % 4294967296)^xleft
 
@@ -463,9 +471,7 @@ class Blowfish():
         left, right = right, left
         right ^= self.P[16]
         left ^= self.P[17]
-        ret = bytearray(pack('>I', left))
-        ret.extend(pack('>I', right))
-        return ret
+        return pack('>Q',left << 32 | right)
         
     def decrypt_block(self, block):
         """
