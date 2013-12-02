@@ -15,7 +15,9 @@ class TestRunningTime(unittest.TestCase):
         self.cipher = Blowfish(zero_key)
         for i in range(self.n):
             self.test_once()
-            if i % 100 == 0:
+            if i % 1000 == 0:
+                if i % 100000 == 0:
+                    print()
                 print('.', end='')
                 sys.stdout.flush()
 
@@ -27,7 +29,7 @@ class TestRunningTime(unittest.TestCase):
 
 x = TestRunningTime()
 x.setUp()
-x.n = 100000 #int(input("How many times should we encrypt the all 0 bitstring?\n"))
+x.n = 1000000 #int(input("How many times should we encrypt the all 0 bitstring?\n"))
 
 if False: # Using cProfile
     cProfile.run('x.test_ntimes()')
