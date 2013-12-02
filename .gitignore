@@ -1,3 +1,7 @@
+*.pyperf
+*.pyproj
+*.suo
+
 *.py[cod]
 
 # C extensions
