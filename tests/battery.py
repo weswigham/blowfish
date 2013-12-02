@@ -48,9 +48,9 @@ class TestVectors(unittest.TestCase):
                 ('FFFFFFFFFFFFFFFF', '0000000000000000', 'F21E9A77B71C49BC'),
                 ('0123456789ABCDEF', '0000000000000000', '245946885754369A'),
                 ('FEDCBA9876543210', 'FFFFFFFFFFFFFFFF', '6B5C5A9C5D9E0A5A')]:
-            key = bytearray.fromhex(key)
-            cleartext = bytearray.fromhex(cleartext)
-            ciphertext = bytearray.fromhex(ciphertext)
+            key = bytes.fromhex(key)
+            cleartext = bytes.fromhex(cleartext)
+            ciphertext = bytes.fromhex(ciphertext)
 
             self.test_vector(key, cleartext) # in-place encrypt
             print(hex(struct.unpack('>Q',cleartext)[0]))

@@ -1,9 +1,16 @@
 from struct import unpack,pack
+import cython
 
 ### Cython Stuff
 ###
 from libc.stdint cimport int8_t, int16_t, int32_t, int64_t
 from libc.stdint cimport uint8_t, uint16_t, uint32_t, uint64_t
+
+cdef extern from "endian.h" nogil:
+    inline uint32_t swap_endian(uint8_t* buffer)
+
+cdef extern from "Python.h":
+    char* Pybytes_AsString(object bytes) except NULL
 
 cdef extern from "stdlib.h" nogil:
     char* memcpy(char* dst, char* src, long len)
@@ -12,6 +19,10 @@ cdef extern from "string.h" nogil:
     long strlen(char* s)
 ###
 ### End Cython Stuff
+
+cdef inline uint32_t fast_unpack(buffer):
+    cdef char* buf = buffer
+    return swap_endian(<uint8_t*>buf)
 
 class Blowfish():
 
@@ -322,16 +333,14 @@ class Blowfish():
         Given a plaintext block, produces a ciphertext
         """
         eblock = self.encrypt_block(plain)
-        for i in range(8):
-            plain[i] = eblock[i]
+        memcpy(plain, eblock, 8)
         
     def decrypt(self, cipher):
         """
         Given a ciphertext block, produces a plaintext
         """
         cblock = self.decrypt_block(cipher)
-        for i in range(8):
-            cipher[i] = cblock[i]
+        memcpy(cipher, cblock, 8)
         
     def generate_s_box(self):
         """
@@ -342,30 +351,29 @@ class Blowfish():
         key_len = len(self.key)
         cur_pos = 0
         for i in range(len(self.P)):
-            if cur_pos+4 >= key_len:
+            if cur_pos + 4 >= key_len:
                 next_pos = (cur_pos+4)%key_len
-                wrapped = self.key[cur_pos:]
-                wrapped.extend(self.key[:next_pos])
-                self.P[i] ^= unpack('>I',wrapped)[0]
+                wrapped = self.key[cur_pos:] + self.key[:next_pos]
+                self.P[i] ^= fast_unpack(wrapped)
                 cur_pos = next_pos
             else:
-                self.P[i] ^= unpack('>I',self.key[cur_pos:cur_pos+4])[0]
+                self.P[i] ^= fast_unpack(self.key[cur_pos:cur_pos+4])
                 cur_pos += 4
                 
         #Step 3: Encrypt the all-0 string with the algorithm
         
-        all_zero = bytearray.fromhex('00 00 00 00 00 00 00 00')
+        all_zero = bytes.fromhex('00 00 00 00 00 00 00 00')
         
         for i in range(0,len(self.P),2):
             all_zero = self.encrypt_block(all_zero)
-            self.P[i] = unpack('>I',all_zero[0:4])[0]
-            self.P[i+1] = unpack('>I',all_zero[4:8])[0]
+            self.P[i] = fast_unpack(all_zero[0:4])
+            self.P[i+1] = fast_unpack(all_zero[4:8])
             
         for i in range(len(self.S)):
             for j in range(0,len(self.S[i]),2):
                 all_zero = self.encrypt_block(all_zero)
-                self.S[i][j] = unpack('>I',all_zero[0:4])[0]
-                self.S[i][j+1] = unpack('>I',all_zero[4:8])[0]
+                self.S[i][j] = fast_unpack(all_zero[0:4])
+                self.S[i][j+1] = fast_unpack(all_zero[4:8])
         
         
     def feistel(self, uint32_t num):
@@ -375,8 +383,15 @@ class Blowfish():
         # ((S1,a + S2,b mod 2^32) XOR S3,c) + S4,d mod 2^32
         # First, divide num into 4 quarters, a, b, c, and d
 
-        parts = pack('>I', num)
-        a,b,c,d = parts[0],parts[1],parts[2],parts[3]
+        # faster than struct.pack
+        cdef:
+            uint32_t* num_ptr = cython.address(num)
+            uint8_t* num_ptr8 = <uint8_t*>num_ptr
+            uint8_t a = num_ptr8[3]
+            uint8_t b = num_ptr8[2]
+            uint8_t c = num_ptr8[1]
+            uint8_t d = num_ptr8[0]
+
         return (((self.S[0][a] + self.S[1][b] % 2**32) ^ self.S[2][c]) 
                 + self.S[3][d]) % 2**32
                 
@@ -384,8 +399,8 @@ class Blowfish():
         """
         Applies the algorithm to a block
         """
-        left = unpack('>I',block[0:4])[0]
-        right = unpack('>I',block[4:8])[0]
+        left = fast_unpack(block[0:4])
+        right = fast_unpack(block[4:8])
         
         for i in range(0,16):
             left ^= self.P[i]
@@ -396,16 +411,14 @@ class Blowfish():
         right ^= self.P[16]
         left ^= self.P[17]
         
-        ret = bytearray(pack('>I', left))
-        ret.extend(pack('>I', right))
-        return ret
+        return pack('>I', left) + pack('>I', right)
         
     def decrypt_block(self, block):
         """
         Un-Applies the algorithm to a block
         """
-        left = unpack('>I',block[0:4])[0]
-        right = unpack('>I',block[4:8])[0]
+        left = fast_unpack(block[0:4])
+        right = fast_unpack(block[4:8])
         
         for i in range(17,1,-1):
             left ^= self.P[i]
@@ -416,6 +429,4 @@ class Blowfish():
         right ^= self.P[1]
         left ^= self.P[0]
         
-        ret = bytearray(pack('>I', left))
-        ret.extend(pack('>I', left))
-        return ret
+        return pack('>I', left) + pack('>I', right)

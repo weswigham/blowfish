@@ -11,7 +11,7 @@ class TestRunningTime(unittest.TestCase):
         self.n = 1
 
     def test_ntimes(self):
-        zero_key = bytearray(b'\x00' * Blowfish.keySize())
+        zero_key = bytes(b'\x00' * Blowfish.keySize())
         self.cipher = Blowfish(zero_key)
         for i in range(self.n):
             self.test_once()
@@ -22,7 +22,7 @@ class TestRunningTime(unittest.TestCase):
                 sys.stdout.flush()
 
     def test_once(self):
-        zero_block = bytearray(b'\x00' * Blowfish.blockSize())
+        zero_block = bytes(b'\x00' * Blowfish.blockSize())
         self.cipher.encrypt(zero_block)
         #print(zero_block)
 
