@@ -301,8 +301,7 @@ class Blowfish():
         """
         Sets the cipher's key
         """
-        self.key = key
-        self.generate_s_box()
+        self = Blowfish(key)
         
     def encrypt(self, plain):
         """
