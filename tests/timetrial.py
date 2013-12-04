@@ -20,13 +20,14 @@ class TestRunningTime(unittest.TestCase):
         zero_block = bytearray(b'\x00' * Blowfish.blockSize())
         self.cipher.encrypt(zero_block)
         #print(zero_block)
-
-
-x = TestRunningTime()
-x.setUp()
-x.n = 2500000 
-
-cProfile.run('x.test_ntimes()')
-
-
-print('Done.')
+        
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python timetrial.py [number of trials]")
+        sys.exit(1)
+    else:
+        x = TestRunningTime()
+        x.setUp()
+        x.n = int(sys.argv[1])
+        cProfile.run('x.test_ntimes()')
+        print('Done.')
