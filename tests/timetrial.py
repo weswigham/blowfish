@@ -33,6 +33,5 @@ class TestRunningTime(unittest.TestCase):
 
 x = TestRunningTime()
 x.setUp()
-n = input("How many times should the all 0 bitstring?\n")
-x.n = int(n)
+x.n = 2500000
 cProfile.run('x.test_ntimes()')
