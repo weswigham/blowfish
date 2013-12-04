@@ -26,24 +26,25 @@ class TestRunningTime(unittest.TestCase):
         self.cipher.encrypt(zero_block)
         #print(zero_block)
 
+for i in range(3):
+    x = TestRunningTime()
+    x.setUp()
+    x.n = 2500000 #int(input("How many times should we encrypt the all 0 bitstring?\n"))
 
-x = TestRunningTime()
-x.setUp()
-x.n = 1000000 #int(input("How many times should we encrypt the all 0 bitstring?\n"))
+    if False: # Using cProfile
+        cProfile.run('x.test_ntimes()')
 
-if False: # Using cProfile
-    cProfile.run('x.test_ntimes()')
+    if True: # Plain ol' time trial
+        start_t = datetime.now()
+        print("Starting trial at " + str(start_t), end='')
 
-if True: # Plain ol' time trial
-    start_t = datetime.now()
-    print("Starting trial at " + str(start_t))
+        x.test_ntimes()
+        print()
 
-    x.test_ntimes()
-    print()
-
-    end_t = datetime.now()
-    total_t = end_t - start_t
-    print("Ending timetrial at " + str(end_t))
-    print("Total time taken: "+str(total_t))
+        end_t = datetime.now()
+        total_t = end_t - start_t
+        print("Ending timetrial at " + str(end_t))
+        print("Total time taken: "+str(total_t))
+        print()
 
 print('Done.')

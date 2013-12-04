@@ -1,9 +1,6 @@
 import unittest
 import sys
 import struct
-import os
-
-print(os.getcwd())
 
 sys.path.append("../src/")
 from blowfish import Blowfish
@@ -59,7 +56,6 @@ class TestVectors(unittest.TestCase):
     def test_vector(self, key, cleartext):
         self.cipher = Blowfish(key)
         self.cipher.encrypt(cleartext)
-
 
 
 x = TestVectors()
