@@ -12,19 +12,20 @@ def main(mode, key, infile, outfile):
     size = Blowfish.blockSize()
     
     for i in range(0,len(text),size):
-        block = text[i:(i+size)]
+        block = bytearray(text[i:(i+size)])
         
-        for _ in range(len(block)-size):
-            block.append(0)
+        if len(block)<size:
+            for _ in range(size-len(block)):
+                block.append(0)
         
         if mode==MODE_ENCRYPT:
-            out = cipher.encrypt(block)
+            cipher.encrypt(block)
+                    
         elif mode==MODE_DECRYPT:
-            out = cipher.decrypt(block)
+            cipher.decrypt(block)
     
-        outfile.write(out or b'')
-        
-    outfile.flush()
+        outfile.write(block)
+        outfile.flush()
  
 
 if __name__ == "__main__":

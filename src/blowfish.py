@@ -402,5 +402,5 @@ class Blowfish():
         left ^= self.P[0]
         
         ret = bytearray(pack('>I', left))
-        ret.extend(pack('>I', left))
+        ret.extend(pack('>I', right))
         return ret

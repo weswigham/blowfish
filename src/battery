@@ -60,4 +60,4 @@ class TestVectors(unittest.TestCase):
 
 x = TestVectors()
 x.setUp()
-x.test_all()
+x.test_all
